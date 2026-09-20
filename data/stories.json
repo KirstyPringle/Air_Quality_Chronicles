@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Chronicles</title>
+    <meta name="description" content="A global collection of personal stories about air pollution, smog, and environmental change.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Minimal inline reset to ensure consistency */
+        body { margin: 0; padding: 0; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="header-content">
+            <h1>Air Quality Chronicles</h1>
+            <p>Personal testimonies of pollution from around the world.</p>
+        </div>
+    </header>
+
+    <!-- Filter Controls -->
+    <section id="filters">
+        <div class="filter-group">
+            <label for="country-select">Country</label>
+            <select id="country-select">
+                <option value="all">All Countries</option>
+                <!-- Country options will be inserted here by JavaScript -->
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>Time Period</label>
+            <div class="range-slider">
+                <span id="min-year-display">1900</span>
+                <input type="range" id="min-year" min="1900" max="2026" value="1900" step="1">
+                <input type="range" id="max-year" min="1900" max="2026" value="2026" step="1">
+                <span id="max-year-display">2026</span>
+            </div>
+            <div id="date-range-label">Showing: 1900 – 2026</div>
+        </div>
+
+        <div class="filter-group">
+            <label for="search-box">Search Stories</label>
+            <input type="text" id="search-box" placeholder="e.g., 'smog', 'factory', 'London'">
+        </div>
+    </section>
+
+    <!-- Main Content: Story Cards -->
+    <main id="card-grid">
+        <p class="loading-message">Loading archive data...</p>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Air Quality Chronicles.</p>
+            <p>Data sourced from public engagement projects. | <a href="https://github.com/" target="_blank">Hosted on GitHub Pages</a></p>
+        </div>
+    </footer>
+
+    <!-- Load the JavaScript logic -->
+    <script src="app.js"></script>
+</body>
+</html>
