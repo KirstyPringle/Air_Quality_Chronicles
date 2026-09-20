@@ -1,67 +1,234 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Quality Chronicles</title>
-    <meta name="description" content="A global collection of personal stories about air pollution, smog, and environmental change.">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Minimal inline reset to ensure consistency */
-        body { margin: 0; padding: 0; box-sizing: border-box; }
-    </style>
-</head>
-<body>
+/* --- Global Variables & Reset --- */
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #e67e22;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --text-light: #7f8c8d;
+    --border-color: #ecf0f1;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
 
-    <!-- Header Section -->
-    <header>
-        <div class="header-content">
-            <h1>Air Quality Chronicles</h1>
-            <p>Personal testimonies of pollution from around the world.</p>
-        </div>
-    </header>
+* {
+    box-sizing: border-box;
+}
 
-    <!-- Filter Controls -->
-    <section id="filters">
-        <div class="filter-group">
-            <label for="country-select">Country</label>
-            <select id="country-select">
-                <option value="all">All Countries</option>
-                <!-- Country options will be inserted here by JavaScript -->
-            </select>
-        </div>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
 
-        <div class="filter-group">
-            <label>Time Period</label>
-            <div class="range-slider">
-                <span id="min-year-display">1900</span>
-                <input type="range" id="min-year" min="1900" max="2026" value="1900" step="1">
-                <input type="range" id="max-year" min="1900" max="2026" value="2026" step="1">
-                <span id="max-year-display">2026</span>
-            </div>
-            <div id="date-range-label">Showing: 1900 – 2026</div>
-        </div>
+/* --- Header --- */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+}
 
-        <div class="filter-group">
-            <label for="search-box">Search Stories</label>
-            <input type="text" id="search-box" placeholder="e.g., 'smog', 'factory', 'London'">
-        </div>
-    </section>
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
 
-    <!-- Main Content: Story Cards -->
-    <main id="card-grid">
-        <p class="loading-message">Loading archive data...</p>
-    </main>
+header p {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2026 Air Quality Chronicles.</p>
-            <p>Data sourced from public engagement projects. | <a href="https://github.com/" target="_blank">Hosted on GitHub Pages</a></p>
-        </div>
-    </footer>
+/* --- Filter Section --- */
+#filters {
+    background: white;
+    padding: 1.5rem 2rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-end;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
 
-    <!-- Load the JavaScript logic -->
-    <script src="app.js"></script>
-</body>
-</html>
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+select, input[type="text"] {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+select:focus, input[type="text"]:focus {
+    outline: 2px solid var(--accent-color);
+    border-color: transparent;
+}
+
+/* Range Slider Styling */
+.range-slider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+input[type="range"] {
+    width: 120px;
+    cursor: pointer;
+}
+
+#date-range-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+}
+
+/* --- Main Grid --- */
+#card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 60vh;
+}
+
+.loading-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-top: 3rem;
+}
+
+/* --- Card Design --- */
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.card-image {
+    height: 200px;
+    background-color: #ddd;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-meta {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    line-height: 1.4;
+}
+
+.card-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.card-footer:hover {
+    color: var(--accent-color);
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #e9ecef;
+    color: var(--text-light);
+    margin-top: 3rem;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    #filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .range-slider {
+        justify-content: space-between;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    #card-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+}
