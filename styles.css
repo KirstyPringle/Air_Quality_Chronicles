@@ -28,8 +28,21 @@ body {
 header {
     background-color: var(--primary-color);
     color: white;
+    padding: 2rem 1rem;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-text {
+    flex: 1;
     text-align: center;
-    padding: 3rem 1rem;
 }
 
 header h1 {
@@ -44,10 +57,14 @@ header p {
     margin-top: 1rem;
     font-size: 1.1rem;
     opacity: 0.95;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
     line-height: 1.5;
+}
+
+.header-logo {
+    height: 120px; /* Adjust size here */
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 /* --- Filter Section --- */
@@ -71,8 +88,8 @@ header p {
     flex-direction: column;
     gap: 0.5rem;
     min-width: 200px;
-    flex: 1; /* Allows filters to grow evenly */
-    max-width: 300px; /* Prevents them from getting too wide */
+    flex: 1;
+    max-width: 300px;
 }
 
 .filter-group label {
@@ -149,7 +166,7 @@ input[type="range"] {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--border-color);
-    height: 100%; /* Ensures all cards in a row are same height */
+    height: 100%;
 }
 
 .card:hover {
@@ -169,7 +186,7 @@ input[type="range"] {
     font-size: 0.9rem;
     font-style: italic;
     border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0; /* Prevents image from shrinking */
+    flex-shrink: 0;
 }
 
 .card-content {
@@ -197,8 +214,6 @@ input[type="range"] {
     flex-grow: 1;
 }
 
-/* Removed .card-footer styles as requested */
-
 /* --- Footer --- */
 footer {
     text-align: center;
@@ -222,6 +237,24 @@ footer a:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
+    /* Header Mobile */
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-text {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .header-logo {
+        height: 80px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    /* Filters Mobile */
     #filters {
         flex-direction: column;
         align-items: stretch;
@@ -247,8 +280,9 @@ footer a:hover {
         padding: 0 1rem;
     }
 
+    /* Grid Mobile */
     #card-grid {
-        grid-template-columns: 1fr; /* Single column on mobile */
+        grid-template-columns: 1fr;
         padding: 1rem;
         gap: 1.5rem;
     }

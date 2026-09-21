@@ -12,18 +12,21 @@
 </head>
 <body>
 
-    <!-- Header Section -->
+    <!-- Header Section with Logo -->
     <header>
         <div class="header-content">
-            <h1>Air Quality Chronicles</h1>
-            <!-- Updated Tagline -->
-            <p>While the health effects of air pollution are critical, it also profoundly shapes our daily lives, memories, and communities.</p>
+            <div class="header-text">
+                <h1>Air Quality Chronicles</h1>
+                <p>While the health effects of air pollution are critical, it also profoundly shapes our daily lives, memories, and communities.</p>
+            </div>
+            <!-- Logo Image -->
+            <img src="images/Logo_No_background.png" alt="Air Quality Chronicles Logo" class="header-logo">
         </div>
     </header>
 
     <!-- Filter Controls -->
     <section id="filters">
-        <!-- Existing Country Dropdown -->
+        <!-- Country Dropdown -->
         <div class="filter-group">
             <label for="country-select">Filter by Country</label>
             <select id="country-select">
@@ -32,7 +35,7 @@
             </select>
         </div>
 
-        <!-- NEW: Search by Country Text Box -->
+        <!-- Country Search Box -->
         <div class="filter-group">
             <label for="country-search">Search Country Name</label>
             <input type="text" id="country-search" placeholder="e.g., 'England', 'Mexico'">
