@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let stories = [];
     const cardGrid = document.getElementById('card-grid');
     const countrySelect = document.getElementById('country-select');
+    const countrySearch = document.getElementById('country-search'); // New input
     const minYearInput = document.getElementById('min-year');
     const maxYearInput = document.getElementById('max-year');
     const minYearDisplay = document.getElementById('min-year-display');
@@ -12,9 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Load Data
     fetch('data/stories.json')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
@@ -24,14 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error loading stories:', error);
-            cardGrid.innerHTML = `<p class="loading-message" style="color:red;">Error loading data. Please ensure 'data/stories.json' exists and is valid JSON.</p>`;
+            cardGrid.innerHTML = `<p class="loading-message" style="color:red;">Error loading data. Please ensure 'data/stories.json' exists.</p>`;
         });
 
     // 2. Populate Country Dropdown
     function initCountryFilter() {
-        // Extract unique country codes
         const countries = [...new Set(stories.map(s => s.country_code).filter(c => c))].sort();
-        
         countries.forEach(code => {
             const option = document.createElement('option');
             option.value = code;
@@ -40,23 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Helper: Parse flexible date formats (e.g., "196X", "1950/1969", "2020")
+    // 3. Helper: Parse flexible date formats
     function parseYear(yearStr) {
         if (!yearStr) return 0;
-        
-        // Handle ranges like "1950/1969" -> take the start year
         if (yearStr.includes('/')) {
             const parts = yearStr.split('/');
             const start = parseInt(parts[0]);
             return isNaN(start) ? 0 : start;
         }
-        
-        // Handle "196X" -> treat as 1960
         if (yearStr.includes('X')) {
             return parseInt(yearStr.replace('X', '0'));
         }
-        
-        // Handle standard years or "1960/.."
         const cleanStr = yearStr.replace('/..', '');
         const year = parseInt(cleanStr);
         return isNaN(year) ? 0 : year;
@@ -80,26 +71,21 @@ document.addEventListener('DOMContentLoaded', () => {
             let imageContent = 'No Image Available';
             
             if (story.card_image && story.card_image.trim() !== '') {
-                // Assumes images are in the 'images' folder
                 imageStyle = `background-image: url('images/${story.card_image}')`;
                 imageContent = ''; 
             }
 
-            // Format Date for Display
             const displayDate = story.event_date || 'Unknown Date';
             const location = story.place || 'Unknown Location';
 
+            // UPDATED: Removed the card-footer "Read Full Story" section
             card.innerHTML = `
                 <div class="card-image" style="${imageStyle}">${imageContent}</div>
                 <div class="card-content">
                     <div class="card-meta">${location} • ${displayDate}</div>
                     <div class="card-title">${story.story_short}</div>
-                    <div class="card-footer">Read Full Story →</div>
                 </div>
             `;
-            
-            // Optional: Add click event later to open individual story pages
-            // card.addEventListener('click', () => alert('Open story: ' + story.id));
             
             cardGrid.appendChild(card);
         });
@@ -107,7 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Filtering Logic
     function filterStories() {
-        const selectedCountry = countrySelect.value;
+        const selectedCountryCode = countrySelect.value;
+        const countrySearchTerm = countrySearch.value.toLowerCase(); // New filter
         const minYear = parseInt(minYearInput.value);
         const maxYear = parseInt(maxYearInput.value);
         const searchTerm = searchBox.value.toLowerCase();
@@ -117,27 +104,29 @@ document.addEventListener('DOMContentLoaded', () => {
         maxYearDisplay.textContent = maxYear;
         dateRangeLabel.textContent = `Showing: ${minYear} – ${maxYear}`;
 
-        // Ensure min is not greater than max visually
-        if (minYear > maxYear) {
-            // Optional: Auto-adjust or prevent move. For now, we just filter strictly.
-        }
-
         const filtered = stories.filter(story => {
-            // A. Country Filter
-            if (selectedCountry !== 'all' && story.country_code !== selectedCountry) {
+            // A. Country Dropdown Filter (Code)
+            if (selectedCountryCode !== 'all' && story.country_code !== selectedCountryCode) {
                 return false;
             }
 
-            // B. Date Filter
+            // B. Country Search Box Filter (Name/Place)
+            if (countrySearchTerm) {
+                const placeName = (story.place || "").toLowerCase();
+                const countryCode = (story.country_code || "").toLowerCase();
+                if (!placeName.includes(countrySearchTerm) && !countryCode.includes(countrySearchTerm)) {
+                    return false;
+                }
+            }
+
+            // C. Date Filter
             const storyYear = parseYear(story.event_date);
-            // If story has no date (0), should we show it? Let's hide it for date ranges.
             if (storyYear === 0) return false; 
-            
             if (storyYear < minYear || storyYear > maxYear) {
                 return false;
             }
 
-            // C. Search Filter (Searches short story, raw story, and place)
+            // D. General Search Filter
             if (searchTerm) {
                 const searchContent = `
                     ${story.story_short} 
@@ -159,22 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Event Listeners
     countrySelect.addEventListener('change', filterStories);
-    
+    countrySearch.addEventListener('input', filterStories); // New listener
     minYearInput.addEventListener('input', () => {
-        // Prevent min slider from going above max slider
         if (parseInt(minYearInput.value) > parseInt(maxYearInput.value)) {
             minYearInput.value = maxYearInput.value;
         }
         filterStories();
     });
-
     maxYearInput.addEventListener('input', () => {
-        // Prevent max slider from going below min slider
         if (parseInt(maxYearInput.value) < parseInt(minYearInput.value)) {
             maxYearInput.value = minYearInput.value;
         }
         filterStories();
     });
-
     searchBox.addEventListener('input', filterStories);
 });
